@@ -4,16 +4,14 @@ from matplotlib import pyplot as plt
 
 
 
-
 class Plotter():
-    """
-    A class for creating plots using `seaborn`
+    """A class for creating plots using `seaborn`
     functions and `seaborn.objects`.
     
     Parameters
     ----------
-    query : str
-        Query string for selecting the dataset.
+    data : pyspark.sql.dataframe.DataFrame
+        A spark DataFrame.
     palette : str 
         Color palette.
     rc_params : dict or None
@@ -21,7 +19,7 @@ class Plotter():
     
     Attributes
     ----------
-    data : `pandas.DataFrame`
+    data : pandas.DataFrame
         A tabular dataset used for plotting.
     palette : str or sequence
         Color palette.
@@ -29,8 +27,8 @@ class Plotter():
         Dictionary of rc parameter mappings.
     """
     
-    def __init__(self, query, palette, rc_params: dict):
-        self.data = spark.sql(query).toPandas()
+    def __init__(self, data, palette, rc_params: dict):
+        self.data = data.toPandas()
         self.set_theme(palette, rc_params)
     
     
@@ -131,8 +129,7 @@ class Eda(Plotter):
     """
     
     def compare_prop_by_status(self, column: str):
-        """
-        Creates a histogram for comparing the proportion
+        """Creates a histogram for comparing the proportion
         of users for each `column` value by churn status.
         
         Parameters
@@ -166,10 +163,8 @@ class Eda(Plotter):
     
     
     def compare_dist_by_status(self, column: str):
-        """
-        Creates a boxplot and histogram for comparing the distribution of
-        of `column` values by churn status.
-        
+        """Creates a boxplot and histogram for comparing the 
+        distribution of `column` values by churn status.
         
         Parameters
         ----------
