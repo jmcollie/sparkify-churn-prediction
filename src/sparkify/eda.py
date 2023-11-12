@@ -4,218 +4,130 @@ from matplotlib import pyplot as plt
 
 
 
-class Plotter():
-    """A class for creating plots using `seaborn`
-    functions and `seaborn.objects`.
+rc_params = {
+    'font.family': 'sans-serif',
+    'figure.titlesize': 'large',
+    'figure.titleweight': 'normal',
+    'figure.dpi': '120',
+    'figure.edgecolor': 'white',
+    'figure.facecolor': 'white',
+    'axes.titlesize': 'medium',
+    'axes.labelsize': '12',
+    'axes.facecolor': 'white',
+    'axes.titlecolor': 'black',
+    'axes.edgecolor': 'white',
+    'axes.spines.left': 'True',
+    'axes.spines.bottom': 'True',
+    'axes.spines.top': 'False',
+    'axes.spines.right': 'False',
+    'xtick.color': '4C4C4C',
+    'xtick.labelsize': '12',
+    'ytick.labelsize': '12',
+    'ytick.color': '4C4C4C',
+    'boxplot.whiskerprops.color': 'red',
+    'boxplot.whiskerprops.linewidth': '1',
+    'boxplot.capprops.color': '3C3C3C',
+    'boxplot.capprops.linewidth': '1',
+    'boxplot.boxprops.color': '3C3C3C',
+    'boxplot.boxprops.linewidth': '1',
+    'boxplot.medianprops.color': '3C3C3C',
+    'boxplot.medianprops.linewidth': '1',
+    'lines.linewidth': '1',
+    'lines.markersize': '10',
+    'grid.color': '#D3D3D3',
+    'savefig.facecolor': 'white'
+}
+
+
+def box_and_hist_plot_by_status(data, column: str):
+    """Creates a boxplot and histplot using 
+    `column` grouped by ``status`` column.
+    
     
     Parameters
     ----------
+    column : str
+        The column to used for creating a box and
+        hist plot.
+        
     data : pyspark.sql.dataframe.DataFrame
-        A spark DataFrame.
-    palette : str 
-        Color palette.
-    rc_params : dict or None
-        Dictionary of rc parameter mappings.
+        A spark DataFrame containing the column to plot.
     
-    Attributes
+    Returns
+    -------
+    None
+    """
+    
+    data = data.select(
+        ['status', column]
+    ).toPandas()
+    
+    fig, (ax_box, ax_hist) = plt.subplots(
+        nrows=2, 
+        sharex=True, 
+        gridspec_kw={"height_ratios": (.25, .75)}
+    )
+    
+    sns.boxplot(
+        data=data,
+        x=column,
+        y='status',
+        ax=ax_box,
+        notch=True
+    ).set(
+        title='{} By Status'.format(
+        column.replace('_', ' ').title()
+        ),
+        xlabel=None
+    )
+
+    sns.histplot(
+        data=data, 
+        x=column, 
+        hue='status',
+        stat='proportion', 
+        ax=ax_hist
+    ).set(
+        xlabel=column.replace('_', ' '),
+        ylabel='proportion of users'
+    )
+    plt.tight_layout()
+    
+    
+    
+def bar_plot_by_status(data, column: str):
+    """Creates a barplot using `column`
+    grouped by the ``status`` column.
+    
+    
+    Parameters
     ----------
-    data : pandas.DataFrame
-        A tabular dataset used for plotting.
-    palette : str or sequence
-        Color palette.
-    rc_params : dict or None
-        Dictionary of rc parameter mappings.
+    column : str
+        The column to used for creating a bar plot.
+        
+    data : pyspark.sql.dataframe.DataFrame
+        A spark DataFrame containing the column to plot.
+    
+    Returns
+    -------
+    None
+    
     """
     
-    def __init__(self, data, palette, rc_params: dict):
-        self.data = data.toPandas()
-        self.set_theme(palette, rc_params)
+    fig, ax = plt.subplots()
     
+    data = data.select(
+        ['status', column]
+    ).toPandas()
     
-    def set_theme(self, palette, rc_params):
-        """
-        Sets visual aspects used by plots.
-        
-        Parameters
-        ----------
-        
-        palette : str or sequence
-            Color palette.
-        
-        rc_params : dict
-            Dictionary of rc parameter mappings.
-        
-        Returns
-        -------
-        None
-        """
-        
-        self.palette = palette
-        self.rc_params = rc_params
-        
-        sns.set_theme(
-            palette=self.palette, 
-            rc=self.rc_params
-        )
+    sns.histplot(
+        data=data,
+        x=column,
+        hue='status',
+        stat='proportion',
+        multiple='dodge',
+        shrink=.8,
+        ax=ax
+    )
+    plt.tight_layout()
 
-    
-    def plot(self, func = None, plot_kw: dict = None):
-        """
-        Creates a plot using `seaborn` functions or
-        `seaborn.objects.Plot` interface. 
-        
-        
-        Parameters
-        ----------
-        func : str, default = None
-            The `seaborn` function name or None.
-            
-        plot_kw : dict, default=None
-            A dictionary with keywords passed to the `seaborn` function
-            call or `seaborn.objects.Plot` constructor.
-        
-        Returns
-        -------
-        Returns the Axes object with the plot drawn onto it when a function from
-        `seaborn` is specified. When parameter `func` is None, returns
-        an instance of `seaborn.objects.Plot`. 
-        """
-        if func is None:
-            return (
-                so.Plot(
-                    self.data,
-                    **plot_kw
-                )
-                .theme(sns.axes_style())
-                .scale(color=self.palette)
-            )
-        
-        elif hasattr(sns, func) and callable(plot = getattr(sns, func)):
-            return plot(
-                self.data,
-                **plot_kw
-            )
-
-            
-    @staticmethod
-    def create_subplots(subplot_kw: dict):
-        """
-        Creates a figure with subplots.
-        
-        Parameters
-        ----------
-        subplot_kw : dict
-            Dictionary with keywords passed to the 
-            `matplotlib.pyplot.subplots` call.
-            
-        Returns
-        -------
-        fig
-            `matplotlib.figure.Figure`.
-        
-        ax
-            `matplotlib.axes.Axes`, or an array 
-            of `matplotlib.axes.Axes`
-        """
-        return plt.subplots(
-            **subplot_kw
-        )
-    
-    
-class Eda(Plotter):
-    """
-    A class for performing exploratory data analysis
-    on the Sparkify dataset. 
-    """
-    
-    def compare_prop_by_status(self, column: str):
-        """Creates a histogram for comparing the proportion
-        of users for each `column` value by churn status.
-        
-        Parameters
-        ----------
-        column : str
-            The name of the column to plot.
-        
-        Returns
-        -------
-        None
-        
-        
-        """
-        (
-            self.plot(
-                plot_kw = dict(
-                    x=column,
-                    color='status'
-                )
-            )
-            .add(so.Bar(), so.Hist(stat='proportion'), so.Dodge(gap=.1))
-            .label(
-                x=column.replace('_', ' '),
-                y='proportion of users',
-                title='{} By Status'.format(column.replace('_', ' ').title()) 
-            )
-            .layout(engine='tight')
-            .on(plt.figure())
-            .show()
-        )
-    
-    
-    def compare_dist_by_status(self, column: str):
-        """Creates a boxplot and histogram for comparing the 
-        distribution of `column` values by churn status.
-        
-        Parameters
-        ----------
-        column : str
-            The name of the column to plot.
-        
-        Returns
-        -------
-        None
-        
-        """
-        fig, (ax_box, ax_hist) = self.create_subplots(
-            dict(
-                nrows=2, 
-                sharex=True, 
-                gridspec_kw={"height_ratios": (.25, .75)}
-            )
-        )
-
-
-        (
-            self.plot(
-                func='boxplot',
-                plot_kw=dict(
-                    x=column, 
-                    y='status', 
-                    ax=ax_box,
-                    notch=True
-                )
-            )
-            .set(
-                title='{} By Status'.format(
-                    column.replace('_', ' ').title()
-                ),
-                xlabel=None
-            )
-        )
-
-
-        (
-            self.plot(
-                plot_kw=dict(
-                    x=column, 
-                    color='status'
-                )
-            )
-            .add(so.Bars(), so.Hist(stat='proportion'))
-            .label(
-                x=column.replace('_', ' '),
-                y='proportion of users',
-            )
-            .on(ax_hist)
-            .show()
-        )
