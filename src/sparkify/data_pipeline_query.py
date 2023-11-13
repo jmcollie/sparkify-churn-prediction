@@ -232,7 +232,7 @@ class DataPipelineQuery:
             ua.os,
             CASE WHEN ua.is_mobile = 1 THEN 'Mobile' ELSE 'Non-Mobile' END AS device_type,
             ull.level AS last_level,
-            MONTH(up.registration) AS cohort,
+            CONCAT(YEAR(registration), '-', MONTH(registration)) AS cohort,
             up.next_songs/ut.days_observed AS next_songs_per_day,
             up.rolled_adverts/ut.days_observed AS rolled_adverts_per_day,
             up.submitted_downgrades/ut.days_observed AS submitted_downgrades_per_day,
