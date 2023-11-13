@@ -1,6 +1,8 @@
 import seaborn as sns
 import seaborn.objects as so
+import pandas as pd
 from matplotlib import pyplot as plt
+
 
 
 
