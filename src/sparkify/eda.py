@@ -76,7 +76,7 @@ def box_and_hist_plot_by_status(data, column: str):
         notch=True
     ).set(
         title='{} By Status'.format(
-        column.replace('_', ' ').title()
+            column.replace('_', ' ').title()
         ),
         xlabel=None
     )
@@ -95,7 +95,7 @@ def box_and_hist_plot_by_status(data, column: str):
     
     
     
-def bar_plot_by_status(data, column: str):
+def bar_plot_by_status(data, column: str, order: list=None):
     """Creates a barplot using `column`
     grouped by the ``status`` column.
     
@@ -107,6 +107,9 @@ def bar_plot_by_status(data, column: str):
         
     data : pyspark.sql.dataframe.DataFrame
         A spark DataFrame containing the column to plot.
+    
+    order : list
+        A list for modifying the order of the bars.
     
     Returns
     -------
@@ -120,6 +123,9 @@ def bar_plot_by_status(data, column: str):
         ['status', column]
     ).toPandas()
     
+    if order:
+        data[column] = pd.Categorical(data[column], order)
+        
     sns.histplot(
         data=data,
         x=column,
@@ -128,6 +134,12 @@ def bar_plot_by_status(data, column: str):
         multiple='dodge',
         shrink=.8,
         ax=ax
+    ).set(
+        title='{} By Status'.format(
+            column.replace('_', ' ').title()
+        ),
+        xlabel=column.replace('_', ' '),
+        ylabel='proportion of users'
     )
     plt.tight_layout()
 
