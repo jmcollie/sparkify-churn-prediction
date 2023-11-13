@@ -143,3 +143,57 @@ def bar_plot_by_status(data, column: str, order: list=None):
     )
     plt.tight_layout()
 
+
+def get_status_counts_by_column(
+        data, 
+        column: str, 
+        is_datetime: bool=False
+    ):
+    """Gets value counts of the ``status`` column
+    within spark DataFrame `data` when grouped by `column`.
+    
+    Parameters
+    ----------
+    data : pyspark.sql.dataframe.DataFrame
+        The DataFrame to apply groupby
+    
+    column : str
+        The column to group by.
+        
+    is_datetime : bool, default=False
+        Whether the column is of type datetime
+    
+    Returns 
+    -------
+    : pandas.core.series.Series
+        Returns a pandas series with `column` as the index
+        and the normalized value counts of the ``status`` column
+        as the values.
+    """
+    data = (
+        data
+        .select(
+            [column, 'status']
+        )
+        .toPandas()
+    )
+    
+    if is_datetime:
+        data[column] = pd.to_datetime(data[column])
+        grouping_columns = [
+            data[column].dt.year,
+            data[column].dt.month
+        ]
+    else:
+        grouping_columns = [
+            column
+        ]
+    
+    
+    return (
+        data
+        .groupby(
+            grouping_columns
+        )['status']
+        .value_counts(normalize=True)
+    )
