@@ -267,7 +267,7 @@ class DataPipelineQuery:
             ut.days_observed,
             ut.days_registered,
             days_active/ut.unique_days_observed AS proportion_of_days_active,
-            COALESCE(uld.next_songs_last_7d, 0) /IF(ut.days_observed >= 7, 7, ut.days_observed) AS next_songs_per_day_last_7d,
+            COALESCE(uld.next_songs_last_7d, 0)/IF(ut.days_observed >= 7, 7, ut.days_observed) AS next_songs_per_day_last_7d,
             COALESCE(uld.rolled_adverts_last_7d, 0)/IF(ut.days_observed >= 7, 7, ut.days_observed) AS rolled_adverts_per_day_last_7d,
             COALESCE(uld.save_settings_last_7d, 0)/IF(ut.days_observed >= 7, 7, ut.days_observed) AS save_settings_per_day_last_7d,
             COALESCE(uld.home_last_7d, 0)/IF(ut.days_observed >= 7, 7, ut.days_observed) AS home_per_day_last_7d,
@@ -285,19 +285,19 @@ class DataPipelineQuery:
             COALESCE(uld.add_to_playlist_last_7d, 0)/IF(ut.days_observed >= 7, 7, ut.days_observed) AS add_to_playlist_per_day_last_7d,
             COALESCE(uld.added_friends_last_7d, 0)/IF(ut.days_observed >= 7, 7, ut.days_observed) AS added_friends_per_day_last_7d,
             COALESCE(uld.unique_sessions_last_7d, 0)/IF(ut.days_observed >= 7, 7, ut.days_observed) AS sessions_per_day_last_7d,
-            up.rolled_adverts/up.next_songs AS rolled_adverts_per_next_song,
+            COALESCE(up.rolled_adverts/up.next_songs, 0) AS rolled_adverts_per_next_song,
             COALESCE(
                 COALESCE(uld.rolled_adverts_last_7d, 0)/COALESCE(uld.next_songs_last_7d, 0), 0
             ) AS rolled_adverts_per_next_song_last_7d,
-            up.thumbs_up/up.next_songs AS thumbs_up_per_next_song,
+            COALESCE(up.thumbs_up/up.next_songs, 0) AS thumbs_up_per_next_song,
             COALESCE(
                 COALESCE(uld.thumbs_up_last_7d, 0)/COALESCE(uld.next_songs_last_7d, 0), 0
             ) AS thumbs_up_per_next_song_last_7d,
-            up.thumbs_down/up.next_songs AS thumbs_down_per_next_song,
+            COALESCE(up.thumbs_down/up.next_songs, 0) AS thumbs_down_per_next_song,
             COALESCE(
                 COALESCE(uld.thumbs_down_last_7d, 0)/COALESCE(uld.next_songs_last_7d, 0), 0
             ) AS thumbs_down_per_next_song_last_7d,
-            up.add_to_playlist/up.next_songs AS add_to_playlist_per_next_song,
+            COALESCE(up.add_to_playlist/up.next_songs, 0) AS add_to_playlist_per_next_song,
             COALESCE(
                 COALESCE(uld.add_to_playlist_last_7d, 0)/COALESCE(uld.next_songs_last_7d, 0), 0
             ) AS add_to_playlist_per_next_song_last_7d
