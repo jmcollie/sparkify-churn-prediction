@@ -316,4 +316,5 @@ class DataPipelineQuery:
         ON ull.userId = ul.userId
         LEFT JOIN {user_last_7_days} uld
         ON ul.userId = uld.userId
+        WHERE ut.days_observed > 0
     """
