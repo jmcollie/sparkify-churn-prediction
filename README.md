@@ -69,7 +69,7 @@ The Gradient Boosting Tree resulted in an F1 Score of .94, a precision of .98, a
 - Thanks to <a href="udacity.com">Udacity</a> for providing the dataset for this project:
 	[1]: `s3n://udacity-dsnd/sparkify/sparkify_event_data.json`
 	
-- I also thanks to the following resources that were particularly helpful: 
+- Also thanks to the following resources that were particularly helpful in this project: 
 	- [1]: <a href="https://spark.apache.org/docs/latest/api/python/index.html">pyspark</a>
 	- [2]: <a href="https://aws.amazon.com">amazon aws</a>
 	- [3]: <a href="https://seaborn.pydata.org">seaborn</a>
