@@ -64,3 +64,15 @@ After transforming the sparkify dataset into user features, I tested several dif
 I tested four different models: Gradient Boosting Tree Classifier, Decision Tree Classifier, Random Forest, and Logistic Regression - Gradient Boosting Tree Classifier performed the best at optimizing the area under the precision recall curve. 
 The Gradient Boosting Tree resulted in an F1 Score of .94, a precision of .98, a recall value of .9, and accuracy of .97.
 
+
+### Acknowledgements
+- Thanks to Udacity for providing the dataset for this project:
+	[1]: <a href="s3n://udacity-dsnd/sparkify/sparkify_event_data.json">Udacity Sparkify Dataset</a>
+	
+- I also thanks to the following resources that were particularly helpful: 
+	[1]: <a href="https://spark.apache.org/docs/latest/api/python/index.html">pyspark</a>
+	[2]: <a href="https://aws.amazon.com">amazon aws</a>
+	[3]: <a href="https://seaborn.pydata.org">seaborn</a>
+	[4]: <a href="https://docs.python.org/3/library/unittest.html">unittest</a>
+	[5]: <a href="https://matplotlib.org">matplotlib</a>
+
