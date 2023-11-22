@@ -1,7 +1,12 @@
 # sparkify-churn-prediction
 
+### Project Overview
+The purpose of this project was to create a model for predicting customer churn for a fictitious music streaming service called Sparkify. 
+The data consists of user events in the form of a log over the period 2018–10–01 to 2018–12–01 (the observation period) — 
+the data contains 26,259,199 rows and 18 columns with 22,278 unique users.
+
 ### Relevant links
-- <a href="https://medium.com/@jonathan.mi.collier/churn-prediction-in-music-streaming-c1d41e47ccbb">related blog post</a>
+- <a href="https://medium.com/@jonathan.mi.collier/churn-prediction-in-music-streaming-f5f1bd36624e">related blog post</a>
 - sparkify dataset: `s3n://udacity-dsnd/sparkify/sparkify_event_data.json`
 
 ### Libraries used in the project
@@ -55,9 +60,7 @@ given that streaming platforms have many different types of customers (e.g. free
 
 
 ### Summary of the analysis results 
-The goal of this project was to predict churn in a fictional music streaming service called Sparkify. The dataset consists of user events over a period of time (the observation period) with users who either joined the service prior to or during the observation period. I chose to define churn as when a customer cancels service (i.e., when a customer has a `Cancellation Confirmation` event) and aimed to predict whether the next event would be a churn event.
-
 After transforming the sparkify dataset into user features, I tested several different models and hyperparameters using Cross Validation. Since the data I was working with had class imbalance (only 22% of users churned, whereas 78% of users remained active) I used area under the Precision-Recall curve to evaluate the Cross Validation steps due to it's performance on imbalanced data. 
 I tested four different models: Gradient Boosting Tree Classifier, Decision Tree Classifier, Random Forest, and Logistic Regression - Gradient Boosting Tree Classifier performed the best at optimizing the area under the precision recall curve. 
-The Gradient Boosting Tree resulted in an F1 Score of .94, a precision of .98, a recall value of .91, and accuracy of .97.
+The Gradient Boosting Tree resulted in an F1 Score of .94, a precision of .98, a recall value of .9, and accuracy of .97.
 
